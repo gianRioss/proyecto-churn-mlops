@@ -1,0 +1,5 @@
+outs:
+- md5: be4de43d08ac7d73e928ee36439040c5
+  size: 14327842
+  hash: md5
+  path: modelo_churn_extra_trees.pkl

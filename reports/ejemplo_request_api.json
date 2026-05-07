@@ -1,0 +1,17 @@
+{
+    "tenure_months": 21,
+    "monthly_charge": 62.45,
+    "total_charges": 1365.15,
+    "support_tickets": 1,
+    "late_payments": 1,
+    "avg_monthly_usage_gb": 142.87,
+    "contract_type": "mensual",
+    "payment_method": "credito",
+    "internet_service": "movil",
+    "has_streaming": 1,
+    "has_security_pack": 1,
+    "num_products": 3,
+    "region": "norte",
+    "customer_age": 52,
+    "is_promo": 1
+}

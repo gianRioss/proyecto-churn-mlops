@@ -1,0 +1,32 @@
+
+
+### COMANDO: git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+	new file:   .dvc/.gitignore
+	new file:   .dvc/config
+	new file:   .dvcignore
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	data/
+	entrenamiento_churn_1ipynb.ipynb
+	mlruns/
+	models/
+	reports/
+
+
+
+### COMANDO: dvc status
+Data and pipelines are up to date.
+
+
+### COMANDO: find . -name '*.dvc' -o -name '.dvcignore'
+./data/raw/churn_sintetico.csv.dvc
+./models/modelo_churn_extra_trees.pkl.dvc
+./.dvc
+./.dvcignore

@@ -1,0 +1,6 @@
+{
+    "prediction": 1,
+    "probability_churn": 0.7821,
+    "risk_level": "alto",
+    "message": "Cliente con alto riesgo de abandono"
+}
