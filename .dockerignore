@@ -1,0 +1,12 @@
+.git
+.dvc
+mlruns
+__pycache__
+.pytest_cache
+.ipynb_checkpoints
+*.pyc
+*.pyo
+*.pyd
+.env
+venv
+.venv
