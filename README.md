@@ -2,7 +2,7 @@
 
 ## 1. Descripción del proyecto
 
-Este proyecto corresponde a la Etapa 1 del trabajo integrador de Laboratorio de Minería de Datos.
+Este proyecto corresponde al trabajo integrador de Laboratorio de Minería de Datos, incluyendo la Etapa 1 de entrenamiento del modelo y la Etapa 2 de despliegue local mediante FastAPI, Docker y Docker Compose.
 
 El objetivo es construir un modelo de Machine Learning capaz de predecir el abandono de clientes, también conocido como churn, para una empresa simulada llamada AndesLink Servicios Digitales S.A.
 
