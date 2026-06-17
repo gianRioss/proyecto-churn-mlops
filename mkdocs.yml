@@ -19,7 +19,7 @@ nav:
   - Etapa 2 - Despliegue: etapa2_despliegue.md
   - Arquitectura: arquitectura.md
   - Evidencias: evidencias.md
-  - Etapa 3 - Monitoreo: etapa3_monitoreo.md
+  - Próxima etapa - Monitoreo: etapa3_monitoreo.md
 
 markdown_extensions:
   - admonition
