@@ -1,4 +1,5 @@
 from pathlib import Path
+from prometheus_fastapi_instrumentator import Instrumentator
 from typing import Literal
 
 import joblib
@@ -16,6 +17,7 @@ app = FastAPI(
     description="API local para predecir abandono de clientes usando un modelo Extra Trees.",
     version="1.0.0"
 )
+Instrumentator().instrument(app).expose(app, endpoint="/metrics")
 
 
 class ChurnRequest(BaseModel):
