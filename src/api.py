@@ -1,19 +1,23 @@
 import logging
-from pathlib import Path
-from prometheus_fastapi_instrumentator import Instrumentator
 from typing import Literal
 
-import joblib
-import pandas as pd
 from fastapi import FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel, Field
 
+from src.model_service import (
+    MODEL_NAME,
+    MODEL_PATH,
+    MODEL_VERSION,
+    get_message,
+    get_risk_level,
+    load_model,
+    predict_with_model,
+)
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-MODEL_PATH = BASE_DIR / "models" / "modelo_churn_extra_trees.pkl"
+
 API_VERSION = "1.0.0"
-MODEL_NAME = "Extra Trees Classifier"
-MODEL_VERSION = "1.0.0"
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -25,10 +29,17 @@ logger = logging.getLogger("churn_api")
 
 app = FastAPI(
     title="API de Predicción de Churn",
-    description="API local para predecir abandono de clientes usando un modelo Extra Trees.",
+    description=(
+        "API local para predecir abandono de clientes "
+        "usando un modelo Extra Trees."
+    ),
     version=API_VERSION
 )
-Instrumentator().instrument(app).expose(app, endpoint="/metrics")
+
+Instrumentator().instrument(app).expose(
+    app,
+    endpoint="/metrics"
+)
 
 
 class ChurnRequest(BaseModel):
@@ -38,13 +49,38 @@ class ChurnRequest(BaseModel):
     support_tickets: int = Field(..., ge=0)
     late_payments: int = Field(..., ge=0)
     avg_monthly_usage_gb: float = Field(..., ge=0)
-    contract_type: Literal["anual", "bianual", "mensual"]
-    payment_method: Literal["credito", "debito", "efectivo", "transferencia"]
-    internet_service: Literal["cable", "fibra", "movil", "ninguno"]
+
+    contract_type: Literal[
+        "anual",
+        "bianual",
+        "mensual"
+    ]
+
+    payment_method: Literal[
+        "credito",
+        "debito",
+        "efectivo",
+        "transferencia"
+    ]
+
+    internet_service: Literal[
+        "cable",
+        "fibra",
+        "movil",
+        "ninguno"
+    ]
+
     has_streaming: int = Field(..., ge=0, le=1)
     has_security_pack: int = Field(..., ge=0, le=1)
     num_products: int = Field(..., ge=0)
-    region: Literal["centro", "norte", "oeste", "sur"]
+
+    region: Literal[
+        "centro",
+        "norte",
+        "oeste",
+        "sur"
+    ]
+
     customer_age: int = Field(..., ge=0)
     is_promo: int = Field(..., ge=0, le=1)
 
@@ -56,23 +92,8 @@ class ChurnResponse(BaseModel):
     message: str
 
 
-def load_model():
-    try:
-        if not MODEL_PATH.exists():
-            logger.error("No se encontró el modelo en: %s", MODEL_PATH)
-            return None
-
-        loaded_model = joblib.load(MODEL_PATH)
-        logger.info("Modelo cargado correctamente desde: %s", MODEL_PATH)
-
-        return loaded_model
-
-    except Exception:
-        logger.exception("Error al cargar el modelo")
-        return None
-
-
 model = load_model()
+
 
 HEALTHCHECK_SAMPLE = {
     "tenure_months": 21,
@@ -93,37 +114,25 @@ HEALTHCHECK_SAMPLE = {
 }
 
 
-def get_risk_level(probability: float) -> str:
-    if probability >= 0.70:
-        return "alto"
-    elif probability >= 0.40:
-        return "medio"
-    else:
-        return "bajo"
-
-
-def get_message(risk_level: str) -> str:
-    if risk_level == "alto":
-        return "Cliente con alto riesgo de abandono"
-    elif risk_level == "medio":
-        return "Cliente con riesgo medio de abandono"
-    else:
-        return "Cliente con bajo riesgo de abandono"
-
-
 @app.get("/")
 def root():
     return {
-        "message": "API de predicción de churn funcionando correctamente",
+        "message": (
+            "API de predicción de churn "
+            "funcionando correctamente"
+        ),
         "model": MODEL_NAME,
         "model_version": MODEL_VERSION,
         "api_version": API_VERSION
     }
 
+
 @app.get("/health")
 def health():
     if model is None:
-        logger.error("Healthcheck fallido: modelo no disponible")
+        logger.error(
+            "Healthcheck fallido: modelo no disponible"
+        )
 
         raise HTTPException(
             status_code=503,
@@ -131,10 +140,10 @@ def health():
         )
 
     try:
-        sample_df = pd.DataFrame([HEALTHCHECK_SAMPLE])
-
-        prediction = int(model.predict(sample_df)[0])
-        probability = float(model.predict_proba(sample_df)[:, 1][0])
+        prediction, probability = predict_with_model(
+            model,
+            HEALTHCHECK_SAMPLE
+        )
 
         return {
             "status": "ok",
@@ -149,37 +158,52 @@ def health():
         }
 
     except Exception as exc:
-        logger.exception("Falló la prueba de inferencia del healthcheck")
+        logger.exception(
+            "Falló la prueba de inferencia del healthcheck"
+        )
 
         raise HTTPException(
             status_code=503,
-            detail="La API está activa, pero el modelo no supera la prueba de inferencia"
+            detail=(
+                "La API está activa, pero el modelo "
+                "no supera la prueba de inferencia"
+            )
         ) from exc
 
 
 @app.post("/predict", response_model=ChurnResponse)
 def predict_churn(request: ChurnRequest):
     if model is None:
-        logger.error("Intento de predicción con el modelo no disponible")
+        logger.error(
+            "Intento de predicción con el modelo no disponible"
+        )
 
         raise HTTPException(
             status_code=503,
-            detail="El modelo de predicción no está disponible"
+            detail=(
+                "El modelo de predicción "
+                "no está disponible"
+            )
         )
 
     try:
         input_data = request.model_dump()
-        input_df = pd.DataFrame([input_data])
 
-        prediction = int(model.predict(input_df)[0])
-        probability = float(model.predict_proba(input_df)[:, 1][0])
+        prediction, probability = predict_with_model(
+            model,
+            input_data
+        )
+
         probability_rounded = round(probability, 4)
 
         risk_level = get_risk_level(probability)
         message = get_message(risk_level)
 
         logger.info(
-            "Predicción realizada | prediction=%s | probability=%.4f | risk=%s",
+            (
+                "Predicción realizada | "
+                "prediction=%s | probability=%.4f | risk=%s"
+            ),
             prediction,
             probability,
             risk_level
@@ -193,7 +217,9 @@ def predict_churn(request: ChurnRequest):
         )
 
     except Exception as exc:
-        logger.exception("Error durante la inferencia")
+        logger.exception(
+            "Error durante la inferencia"
+        )
 
         raise HTTPException(
             status_code=500,
