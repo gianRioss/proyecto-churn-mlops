@@ -1,0 +1,89 @@
+{
+  "info": {
+    "name": "Proyecto Churn MLOps - API FastAPI",
+    "description": "Colección Postman para probar la API local de predicción de churn. Incluye endpoints de estado, healthcheck, predicción y métricas.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Root - Estado general",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      }
+    },
+    {
+      "name": "Healthcheck - Modelo e inferencia",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Predict - Cliente alto riesgo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"tenure_months\": 21,\n  \"monthly_charge\": 62.45,\n  \"total_charges\": 1365.15,\n  \"support_tickets\": 1,\n  \"late_payments\": 1,\n  \"avg_monthly_usage_gb\": 142.87,\n  \"contract_type\": \"mensual\",\n  \"payment_method\": \"credito\",\n  \"internet_service\": \"movil\",\n  \"has_streaming\": 1,\n  \"has_security_pack\": 1,\n  \"num_products\": 3,\n  \"region\": \"norte\",\n  \"customer_age\": 52,\n  \"is_promo\": 1\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/predict",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "predict"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Metrics - Prometheus",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/metrics",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "metrics"
+          ]
+        }
+      }
+    }
+  ]
+}
