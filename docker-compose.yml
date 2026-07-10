@@ -23,6 +23,26 @@ services:
       retries: 3
       start_period: 30s
 
+  streamlit:
+    build: .
+    container_name: churn_streamlit
+    ports:
+      - "8501:8501"
+    environment:
+      API_URL: http://churn-api:8000
+    command:
+      - python
+      - -m
+      - streamlit
+      - run
+      - src/streamlit_app.py
+      - --server.address=0.0.0.0
+      - --server.port=8501
+    depends_on:
+      churn-api:
+        condition: service_healthy
+    restart: unless-stopped
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
