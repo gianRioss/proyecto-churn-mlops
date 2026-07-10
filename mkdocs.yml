@@ -17,9 +17,11 @@ nav:
   - Inicio: index.md
   - Etapa 1 - Entrenamiento: etapa1_entrenamiento.md
   - Etapa 2 - Despliegue: etapa2_despliegue.md
+  - Etapa 3 - Monitoreo: etapa3_monitoreo.md
   - Arquitectura: arquitectura.md
+  - Guía operativa: guia_operativa.md
   - Evidencias: evidencias.md
-  - Próxima etapa - Monitoreo: etapa3_monitoreo.md
+  
 
 markdown_extensions:
   - admonition
