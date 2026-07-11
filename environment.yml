@@ -26,3 +26,4 @@ dependencies:
       - mkdocs-material==9.6.14
       - prometheus-fastapi-instrumentator==7.1.0      
       - streamlit==1.59.0
+      - evidently==0.6.7
