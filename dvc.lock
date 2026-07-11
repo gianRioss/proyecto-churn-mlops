@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/raw/churn_sintetico.csv
+      hash: md5
+      md5: b8541379ed614873c48ec17bded142ac
+      size: 342760
+    - path: src/train.py
+      hash: md5
+      md5: d0ab64243c1a32a83f990e45455cbfdd
+      size: 7065
+    outs:
+    - path: reports/metricas_modelos.csv
+      hash: md5
+      md5: 11914a48ce37b8d8397c13b90c797b26
+      size: 441

@@ -1,0 +1,9 @@
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+      - data/raw/churn_sintetico.csv
+      - src/train.py
+    metrics:
+      - reports/metricas_modelos.csv:
+          cache: false
