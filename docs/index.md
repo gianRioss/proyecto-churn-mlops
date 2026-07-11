@@ -12,47 +12,40 @@ La solución cubre el ciclo completo de un proyecto de Machine Learning aplicado
 - análisis exploratorio de datos;
 - entrenamiento y evaluación de modelos;
 - serialización del modelo final;
-- trazabilidad con MLflow;
-- versionado de datos/modelo con DVC;
+- trazabilidad inicial con MLflow;
+- entrenamiento reproducible con DVC;
 - despliegue local mediante FastAPI;
-- pruebas con Postman y pytest;
+- validación de datos de entrada con Pydantic;
+- pruebas con pytest y Postman;
+- interfaz gráfica con Streamlit;
 - contenedorización con Docker y Docker Compose;
-- preparación para monitoreo técnico y de datos en la Etapa 3.
+- monitoreo técnico con Prometheus y Grafana;
+- análisis de data drift con Evidently;
+- documentación operativa con MkDocs.
 
 ---
 
 ## Estado actual del proyecto
 
-Actualmente se completaron las siguientes etapas:
+Actualmente el proyecto cuenta con un stack MLOps local completo para entrenamiento, despliegue, pruebas, monitoreo y documentación.
 
 ### Etapa 1 - Entrenamiento
 
-Se entrenaron y compararon modelos de clasificación binaria para predecir churn.  
-El modelo seleccionado fue **Extra Trees Classifier**, priorizando el recall para detectar clientes con riesgo de abandono.
+Se entrenaron y compararon modelos de clasificación binaria para predecir churn.
 
-### Etapa 2 - Despliegue local
+Modelos evaluados:
 
-Se desarrolló una API con **FastAPI** que carga el modelo serializado y permite obtener predicciones mediante el endpoint `/predict`.
+- Logistic Regression;
+- Random Forest;
+- Decision Tree;
+- Extra Trees.
 
-Además, se agregaron pruebas automáticas con **pytest** y despliegue reproducible mediante **Docker Compose**.
+El modelo seleccionado fue **Extra Trees Classifier**, priorizando la detección de clientes con riesgo de abandono.
 
-### Etapa 3 - Monitoreo
+Artefactos principales:
 
-La próxima etapa incorporará monitoreo técnico con **Prometheus** y **Grafana**, además de monitoreo de datos o drift con **Evidently**.
-
----
-
-## Tecnologías utilizadas
-
-- Python
-- Pandas
-- Scikit-learn
-- MLflow
-- DVC
-- FastAPI
-- Pydantic
-- Pytest
-- Docker
-- Docker Compose
-- MkDocs Material
-- Git y GitHub
+```text
+models/modelo_churn_extra_trees.pkl
+models/features_modelo.txt
+reports/metricas_modelos.csv
+reports/informe_entrenamiento_etapa1.md
